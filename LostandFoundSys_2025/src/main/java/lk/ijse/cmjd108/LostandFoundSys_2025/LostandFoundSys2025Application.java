@@ -25,5 +25,5 @@ public class LostandFoundSys2025Application {
 		LOGGER.info("Application started");
 		SpringApplication.run(LostandFoundSys2025Application.class, args);
 	}
-
+	
 }
