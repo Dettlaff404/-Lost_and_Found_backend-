@@ -3,7 +3,6 @@ package lk.ijse.cmjd108.LostandFoundSys_2025.controller;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -19,13 +18,14 @@ import org.springframework.web.bind.annotation.RestController;
 
 import lk.ijse.cmjd108.LostandFoundSys_2025.dto.RequestDTO;
 import lk.ijse.cmjd108.LostandFoundSys_2025.service.RequestService;
+import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequestMapping("api/v1/requests")
+@RequiredArgsConstructor
 public class RequestController {
 
-    @Autowired
-    private RequestService requestService;
+    private final RequestService requestService;
 
     @GetMapping("health")
     public String healthCheck() {
