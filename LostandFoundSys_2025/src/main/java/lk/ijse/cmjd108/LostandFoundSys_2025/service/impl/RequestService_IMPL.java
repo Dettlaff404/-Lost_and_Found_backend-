@@ -7,14 +7,16 @@ import org.springframework.stereotype.Service;
 
 import lk.ijse.cmjd108.LostandFoundSys_2025.dto.RequestDTO;
 import lk.ijse.cmjd108.LostandFoundSys_2025.service.RequestService;
+import lk.ijse.cmjd108.LostandFoundSys_2025.util.UtilData;
 
 @Service
 public class RequestService_IMPL implements RequestService{
     
     @Override
     public void addRequest(RequestDTO requestDTO) {
-        System.out.println("Request added Successfully");
+        requestDTO.setRequestId(UtilData.generateRequestId());
         System.out.println(requestDTO);
+        System.out.println("Request added Successfully");
     }
     
     @Override

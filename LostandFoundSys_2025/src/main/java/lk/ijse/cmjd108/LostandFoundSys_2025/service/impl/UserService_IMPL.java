@@ -7,14 +7,16 @@ import org.springframework.stereotype.Service;
 
 import lk.ijse.cmjd108.LostandFoundSys_2025.dto.UserDTO;
 import lk.ijse.cmjd108.LostandFoundSys_2025.service.UserService;
+import lk.ijse.cmjd108.LostandFoundSys_2025.util.UtilData;
 
 @Service
 public class UserService_IMPL implements UserService {
 
     @Override
     public void addUser(UserDTO userDTO) {
-       System.out.println("User added Successfully");
-       System.out.println(userDTO);
+        userDTO.setUserId(UtilData.generateUserId());
+        System.out.println(userDTO);
+        System.out.println("User added Successfully");
     }
     
     @Override

@@ -7,14 +7,16 @@ import org.springframework.stereotype.Service;
 
 import lk.ijse.cmjd108.LostandFoundSys_2025.dto.ItemDTO;
 import lk.ijse.cmjd108.LostandFoundSys_2025.service.ItemService;
+import lk.ijse.cmjd108.LostandFoundSys_2025.util.UtilData;
 
 @Service
 public class ItemService_IMPL implements ItemService {
 
     @Override
     public void addItem(ItemDTO itemDTO) {
-       System.out.println("Item added Successfully");
-       System.out.println(itemDTO);
+        itemDTO.setItemId(UtilData.generateItemId());
+        System.out.println(itemDTO);
+        System.out.println("Item added Successfully");
     }
 
     @Override
@@ -39,5 +41,5 @@ public class ItemService_IMPL implements ItemService {
     public List<ItemDTO> getAllItems() {
         return new ArrayList<ItemDTO>();
     }
-    
+
 }
