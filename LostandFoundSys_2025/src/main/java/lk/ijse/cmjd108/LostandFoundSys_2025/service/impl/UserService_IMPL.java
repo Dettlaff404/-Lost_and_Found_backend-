@@ -11,25 +11,25 @@ import lk.ijse.cmjd108.LostandFoundSys_2025.service.UserService;
 public class UserService_IMPL implements UserService {
 
     @Override
-    public void addUser() {
+    public void addUser(UserDTO userDTO) {
        
     }
-
+    
     @Override
-    public void updateUser() {
+    public void deleteUser(String userId) {
         
     }
 
     @Override
-    public void deleteUser() {
-       
+    public void updateUser(String userId, UserDTO userDTO) {
+        
     }
-
+    
     @Override
-    public UserDTO getSelectedUser() {
+    public UserDTO getSelectedUser(String userId) {
         return null;
     }
-
+    
     @Override
     public List<UserDTO> getAllUsers() {
         return List.of();

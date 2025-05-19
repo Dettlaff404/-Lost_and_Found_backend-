@@ -11,22 +11,22 @@ import lk.ijse.cmjd108.LostandFoundSys_2025.service.ItemService;
 public class ItemService_IMPL implements ItemService {
 
     @Override
-    public void addItem() {
+    public void addItem(ItemDTO itemDTO) {
+       
+    }
+
+    @Override
+    public void deleteItem(String itemId) {
         
     }
 
     @Override
-    public void deleteItem() {
+    public void updateItem(String itemId, ItemDTO itemDTO) {
         
     }
 
     @Override
-    public void updateItem() {
-        
-    }
-
-    @Override
-    public ItemDTO getSelectedItem() {
+    public ItemDTO getSelectedItem(String itemId) {
         return null;
     }
 
@@ -34,5 +34,7 @@ public class ItemService_IMPL implements ItemService {
     public List<ItemDTO> getAllItems() {
         return List.of();
     }
+
+    
 
 }
