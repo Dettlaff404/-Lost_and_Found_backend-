@@ -1,5 +1,6 @@
 package lk.ijse.cmjd108.LostandFoundSys_2025.service.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
@@ -18,22 +19,25 @@ public class UserService_IMPL implements UserService {
     
     @Override
     public void deleteUser(String userId) {
-        
+        System.out.println("User deleted Successfully");
+        System.out.println(userId);
     }
 
     @Override
     public void updateUser(String userId, UserDTO userDTO) {
-        
+        System.out.println("User updated Successfully");
+        System.out.println(userId);
+        System.out.println(userDTO);
     }
     
     @Override
     public UserDTO getSelectedUser(String userId) {
-        return null;
+        return new UserDTO();
     }
     
     @Override
     public List<UserDTO> getAllUsers() {
-        return List.of();
+        return new ArrayList<UserDTO>();
     }
 
 }

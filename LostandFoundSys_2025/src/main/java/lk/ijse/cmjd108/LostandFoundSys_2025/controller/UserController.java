@@ -1,6 +1,5 @@
 package lk.ijse.cmjd108.LostandFoundSys_2025.controller;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.http.HttpStatus;
@@ -40,25 +39,23 @@ public class UserController {
 
     @DeleteMapping
     public ResponseEntity<Void> deleteUser(@RequestParam String userId){
-        System.out.println(userId);
+        userService.deleteUser(userId);
         return ResponseEntity.noContent().build();
     }
 
     @PatchMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Void> updateUser(@RequestParam String userId, @RequestBody UserDTO userDto){
-        System.out.println(userId);
-        System.out.println(userDto);
+        userService.updateUser(userId, userDto);
         return ResponseEntity.noContent().build();
     }
 
     @GetMapping("/{userId}")
     public ResponseEntity<UserDTO> getSelectedUser(@PathVariable String userId) {
-        System.out.println("Get Selected User for " + userId);
-        return ResponseEntity.ok(new UserDTO());
+        return ResponseEntity.ok(userService.getSelectedUser(userId));
     }
 
     @GetMapping
     public ResponseEntity<List<UserDTO>> getAllUsers() {
-        return ResponseEntity.ok(new ArrayList<>());
+        return ResponseEntity.ok(userService.getAllUsers());
     }
 }
