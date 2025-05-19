@@ -3,6 +3,7 @@ package lk.ijse.cmjd108.LostandFoundSys_2025.controller;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -17,10 +18,14 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import lk.ijse.cmjd108.LostandFoundSys_2025.dto.UserDTO;
+import lk.ijse.cmjd108.LostandFoundSys_2025.service.UserService;
 
 @RestController
 @RequestMapping("api/v1/users")
 public class UserController {
+
+    @Autowired
+    private UserService userService;
 
      @GetMapping("health")
     public String healthCheck() {
@@ -29,7 +34,7 @@ public class UserController {
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Void> addUser(@RequestBody UserDTO userDTO){
-        System.out.println(userDTO);
+        userService.addUser(userDTO);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 

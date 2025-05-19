@@ -12,7 +12,8 @@ public class RequestService_IMPL implements RequestService{
     
     @Override
     public void addRequest(RequestDTO requestDTO) {
-        
+        System.out.println("Request added Successfully");
+        System.out.println(requestDTO);
     }
     
     @Override

@@ -12,7 +12,8 @@ public class ItemService_IMPL implements ItemService {
 
     @Override
     public void addItem(ItemDTO itemDTO) {
-       
+       System.out.println("Item added Successfully");
+       System.out.println(itemDTO);
     }
 
     @Override

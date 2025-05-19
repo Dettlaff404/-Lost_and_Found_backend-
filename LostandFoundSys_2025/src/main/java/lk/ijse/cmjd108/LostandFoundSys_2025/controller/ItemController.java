@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -19,10 +20,14 @@ import org.springframework.web.bind.annotation.RestController;
 
 import lk.ijse.cmjd108.LostandFoundSys_2025.dto.ItemDTO;
 import lk.ijse.cmjd108.LostandFoundSys_2025.dto.Status.ItemStatus;
+import lk.ijse.cmjd108.LostandFoundSys_2025.service.ItemService;
 
 @RestController
 @RequestMapping("api/v1/items")
 public class ItemController {
+
+    @Autowired
+    private ItemService itemService;
 
     @GetMapping("health")
     public String getItems() {
@@ -31,7 +36,7 @@ public class ItemController {
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Void> addItem(@RequestBody ItemDTO itemDTO) {
-        System.out.println(itemDTO);
+        itemService.addItem(itemDTO);
         System.out.println(itemDTO.getDescription());
         return new ResponseEntity<>(HttpStatus.CREATED);
     }

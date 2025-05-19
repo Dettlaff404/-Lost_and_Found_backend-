@@ -12,7 +12,8 @@ public class UserService_IMPL implements UserService {
 
     @Override
     public void addUser(UserDTO userDTO) {
-       
+       System.out.println("User added Successfully");
+       System.out.println(userDTO);
     }
     
     @Override
