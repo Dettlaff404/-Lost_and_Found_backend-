@@ -8,7 +8,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -17,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import lk.ijse.cmjd108.LostandFoundSys_2025.dto.ItemDTO;
 import lk.ijse.cmjd108.LostandFoundSys_2025.dto.RequestDTO;
+import lk.ijse.cmjd108.LostandFoundSys_2025.exception.ItemNotFoundException;
 import lk.ijse.cmjd108.LostandFoundSys_2025.service.ItemService;
 import lombok.RequiredArgsConstructor;
 
@@ -27,37 +27,90 @@ public class ItemController {
 
     private final ItemService itemService;
 
-    @GetMapping("health")
-    public String getItems() {
-        return "Item Controller is working";
-    }
-
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Void> addItem(@RequestBody RequestDTO requestDTO) {
+        
+        if (requestDTO == null) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+        
         itemService.addItem(requestDTO);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
     @DeleteMapping
     public ResponseEntity<Void> deleteItem(@RequestParam ("itemId") String itemId) {
-        itemService.deleteItem(itemId);
-        return ResponseEntity.noContent().build();
+        
+        if (itemId.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+
+        try {
+            itemService.deleteItem(itemId);
+            return ResponseEntity.noContent().build();
+        } catch (ItemNotFoundException e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR); 
+        }
+        
+        
     }
 
     @PatchMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Void> updateItem(@RequestParam ("itemId") String itemId,@RequestBody ItemDTO itemDTO) {
-        itemService.updateItem(itemId, itemDTO);
-        return ResponseEntity.noContent().build();
-    }
+        
+        if (itemId.isEmpty() || itemDTO == null) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
 
-    @GetMapping("/{itemId}")
-    public ResponseEntity<ItemDTO> getSelectedItem(@PathVariable String itemId) {
-        return ResponseEntity.ok(itemService.getSelectedItem(itemId));       
+        try {
+            itemService.updateItem(itemId, itemDTO);
+            return ResponseEntity.noContent().build();
+        } catch (ItemNotFoundException e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR); 
+        }
+
+        
     }
 
     @GetMapping
-    public ResponseEntity<List<ItemDTO>> getAllItems() {
-        return ResponseEntity.ok(itemService.getAllItems());
+    public ResponseEntity<ItemDTO> getSelectedItem(@RequestParam String itemId) {
+        
+        if (itemId.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+
+        try {
+            return ResponseEntity.ok(itemService.getSelectedItem(itemId)); 
+        } catch (ItemNotFoundException e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR); 
+        } 
+    }
+
+    @GetMapping("/getlostitems")
+    public ResponseEntity<List<ItemDTO>> getLostItems() {
+        return ResponseEntity.ok(itemService.getLostItems());
+    }
+
+    @GetMapping("/getfounditems")
+    public ResponseEntity<List<ItemDTO>> getFoundItems() {
+        return ResponseEntity.ok(itemService.getFoundItems());
+    }
+
+    @GetMapping("/getclaimeditems")
+    public ResponseEntity<List<ItemDTO>> getClaimedItems() {
+        return ResponseEntity.ok(itemService.getClaimedItems());
     }
 
 }

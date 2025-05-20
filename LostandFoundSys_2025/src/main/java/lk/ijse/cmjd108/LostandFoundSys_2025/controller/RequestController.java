@@ -8,7 +8,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -16,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import lk.ijse.cmjd108.LostandFoundSys_2025.dto.RequestDTO;
+import lk.ijse.cmjd108.LostandFoundSys_2025.exception.RequestNotFoundException;
 import lk.ijse.cmjd108.LostandFoundSys_2025.service.RequestService;
 import lombok.RequiredArgsConstructor;
 
@@ -26,35 +26,69 @@ public class RequestController {
 
     private final RequestService requestService;
 
-    @GetMapping("health")
-    public String healthCheck() {
-        return "Request Controller is working";
-    }
-
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Void> addRequst(@RequestBody RequestDTO requestDTO){
+        
+        if (requestDTO == null) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+        
         requestService.addRequest(requestDTO);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
     @DeleteMapping
     public ResponseEntity<Void> deleteRequest(@RequestParam ("requestId") String requestId){
-        requestService.deleteRequest(requestId);
-        return ResponseEntity.noContent().build();
+        
+        if (requestId.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+
+        try {
+            requestService.deleteRequest(requestId);
+            return ResponseEntity.noContent().build();
+        } catch (RequestNotFoundException e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR); 
+        }
+        
+        
     }
 
     @PatchMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Void> updateRequest(@RequestParam String requestId, @RequestBody RequestDTO requestDTO){
-        requestService.updateRequest(requestId, requestDTO);
-        return ResponseEntity.noContent().build();
-    }
+        
+        if (requestId.isEmpty() || requestDTO == null) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
 
-    @GetMapping("/{requestId}")
-    public ResponseEntity<RequestDTO> getSelectedRequest(@PathVariable String requestId) {
-        return ResponseEntity.ok(requestService.getSelectedRequest(requestId));
+        try {
+            requestService.updateRequest(requestId, requestDTO);
+            return ResponseEntity.noContent().build();
+        } catch (RequestNotFoundException e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR); 
+        }
+
     }
 
     @GetMapping
+    public ResponseEntity<RequestDTO> getSelectedRequest(@RequestParam String requestId) {
+        
+        if (requestId.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+
+        return ResponseEntity.ok(requestService.getSelectedRequest(requestId));
+    }
+
+    @GetMapping("/getallrequests")
     public ResponseEntity<List<RequestDTO>> getAllRequests() {
         return ResponseEntity.ok(requestService.getAllRequests());
     }
