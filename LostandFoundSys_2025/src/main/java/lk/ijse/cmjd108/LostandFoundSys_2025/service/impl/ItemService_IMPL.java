@@ -29,6 +29,10 @@ public class ItemService_IMPL implements ItemService {
     public void addItem(RequestDTO requestDTO) {
         ItemDTO itemDTO = UtilData.reqToItem(requestDTO);
         
+        System.out.println();
+        System.out.println(itemDTO);
+        System.out.println();
+
         itemDao.save(entityDTOConvertor.itemDTOToItemEntity(itemDTO));
 
         System.out.println("Item added Successfully");

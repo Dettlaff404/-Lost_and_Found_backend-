@@ -103,7 +103,11 @@ public class EntityDTO_Convertor {
         try {
             ItemEntity itemEntity = new ItemEntity();
             itemEntity.setItemId(itemDTO.getItemId());
-            itemEntity.setClaimedUser(userDao.findById(itemDTO.getClaimedUserId()).orElse(null));
+            if (itemDTO.getClaimedUserId().equals("") || itemDTO.getClaimedUserId() == null) {
+                itemEntity.setClaimedUser(null);
+            }else {
+                itemEntity.setClaimedUser(userDao.findById(itemDTO.getClaimedUserId()).orElseThrow(() -> new UserNotFoundException("User not found")));
+            }
             itemEntity.setItemName(itemDTO.getItemName());
             itemEntity.setDescription(itemDTO.getDescription());
             itemEntity.setLocation(itemDTO.getLocation());
