@@ -3,6 +3,8 @@ package lk.ijse.cmjd108.LostandFoundSys_2025.entities;
 import java.time.LocalDate;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
@@ -28,6 +30,8 @@ public class RequestEntity {
     private String description;
     private String location;
     private LocalDate date;
+    @Enumerated(EnumType.STRING)
     private ItemStatus itemStatus;
+    @Enumerated(EnumType.STRING)
     private ReqStatus status;
 }
