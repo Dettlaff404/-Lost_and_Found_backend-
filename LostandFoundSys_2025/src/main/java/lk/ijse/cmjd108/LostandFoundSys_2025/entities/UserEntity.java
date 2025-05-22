@@ -4,6 +4,8 @@ import java.util.List;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
@@ -20,10 +22,11 @@ import lombok.NoArgsConstructor;
 public class UserEntity {
     @Id
     private String userId;
-    private String userName;
+    private String fullname;
     private String email;
     private String mobile;
     private String password;
+    @Enumerated(EnumType.STRING)
     private Role role;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
