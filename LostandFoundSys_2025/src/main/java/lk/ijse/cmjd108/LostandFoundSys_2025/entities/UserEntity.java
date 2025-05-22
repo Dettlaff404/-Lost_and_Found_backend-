@@ -1,6 +1,5 @@
 package lk.ijse.cmjd108.LostandFoundSys_2025.entities;
 
-import java.io.Serializable;
 import java.util.Collection;
 import java.util.List;
 
