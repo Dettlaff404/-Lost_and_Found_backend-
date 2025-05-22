@@ -6,6 +6,7 @@ import lk.ijse.cmjd108.LostandFoundSys_2025.dto.ItemDTO;
 import lk.ijse.cmjd108.LostandFoundSys_2025.dto.RequestDTO;
 
 public class UtilData {
+    
     public static String generateItemId(){
         return "ITM-" + UUID.randomUUID().toString();
     }
