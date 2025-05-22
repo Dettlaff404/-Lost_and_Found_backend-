@@ -9,13 +9,14 @@ import org.springframework.stereotype.Service;
 import jakarta.transaction.Transactional;
 import lk.ijse.cmjd108.LostandFoundSys_2025.dao.UserDao;
 import lk.ijse.cmjd108.LostandFoundSys_2025.dto.UserDTO;
+import lk.ijse.cmjd108.LostandFoundSys_2025.dto.Status.Role;
 import lk.ijse.cmjd108.LostandFoundSys_2025.dto.secure.JWTAuthResponse;
 import lk.ijse.cmjd108.LostandFoundSys_2025.dto.secure.SignIn;
 import lk.ijse.cmjd108.LostandFoundSys_2025.entities.UserEntity;
+import lk.ijse.cmjd108.LostandFoundSys_2025.security.jwt.JWTUtils;
 import lk.ijse.cmjd108.LostandFoundSys_2025.service.secure.AuthService;
 import lk.ijse.cmjd108.LostandFoundSys_2025.util.EntityDTO_Convertor;
 import lk.ijse.cmjd108.LostandFoundSys_2025.util.UtilData;
-import lk.ijse.security.jwt.JWTUtils;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -42,6 +43,7 @@ public class AuthService_IMPL implements AuthService{
     public JWTAuthResponse signUp(UserDTO userDTO) {
         userDTO.setUserId(UtilData.generateUserId());
         userDTO.setPassword(passwordEncoder.encode(userDTO.getPassword()));
+        userDTO.setRole(Role.USER);
         UserEntity savedUser = userDao.save(entityDTOConvert.userDTOToUserEntity(userDTO));
         String generatedToken = jwtUtils.generateToken(savedUser.getEmail(), savedUser.getAuthorities());
         return JWTAuthResponse.builder().token(generatedToken).build();

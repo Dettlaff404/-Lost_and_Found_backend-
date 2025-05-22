@@ -1,4 +1,4 @@
-package lk.ijse.security;
+package lk.ijse.cmjd108.LostandFoundSys_2025.security;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -17,8 +17,8 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import lk.ijse.cmjd108.LostandFoundSys_2025.config.CORSConfig;
-import lk.ijse.security.jwt.AuthEntryPoint;
-import lk.ijse.security.jwt.AuthFilter;
+import lk.ijse.cmjd108.LostandFoundSys_2025.security.jwt.AuthEntryPoint;
+import lk.ijse.cmjd108.LostandFoundSys_2025.security.jwt.AuthFilter;
 
 @Configuration
 @EnableWebSecurity
@@ -56,7 +56,7 @@ public class WebSecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.csrf(AbstractHttpConfigurer::disable)
-                .cors(cors -> cors.configurationSource(corsConfig.corsConfigurationSource()))
+                .cors( cors -> cors.configurationSource(corsConfig.corsConfigurationSource()))
                 .exceptionHandling(exception -> exception.authenticationEntryPoint(authEntryPoint))
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth ->

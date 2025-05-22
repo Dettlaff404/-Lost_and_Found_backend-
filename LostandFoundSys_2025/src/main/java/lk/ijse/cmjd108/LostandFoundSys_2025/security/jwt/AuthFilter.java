@@ -1,4 +1,4 @@
-package lk.ijse.security.jwt;
+package lk.ijse.cmjd108.LostandFoundSys_2025.security.jwt;
 
 import java.io.IOException;
 
@@ -16,7 +16,7 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import lk.ijse.security.UserDetailService_IMPL;
+import lk.ijse.cmjd108.LostandFoundSys_2025.security.UserDetailService_IMPL;
 import lombok.RequiredArgsConstructor;
 
 @Configuration

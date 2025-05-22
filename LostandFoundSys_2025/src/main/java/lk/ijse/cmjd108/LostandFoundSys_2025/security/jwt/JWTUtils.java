@@ -1,4 +1,4 @@
-package lk.ijse.security.jwt;
+package lk.ijse.cmjd108.LostandFoundSys_2025.security.jwt;
 
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -32,7 +32,7 @@ public class JWTUtils {
                 .setSubject(username)
                 .claim("roles",roles)
                 .setIssuedAt(new Date())
-                .setExpiration(new Date(System.currentTimeMillis()+ 1000 * 60 *0 * 24))
+                .setExpiration(new Date(System.currentTimeMillis()+ 1000 * 60 *60 * 24))
                 .signWith(key(), SignatureAlgorithm.HS256)
                 .compact();
     }
