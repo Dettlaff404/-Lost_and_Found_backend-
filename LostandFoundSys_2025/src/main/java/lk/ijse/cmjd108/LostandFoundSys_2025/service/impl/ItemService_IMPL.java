@@ -8,7 +8,6 @@ import org.springframework.stereotype.Service;
 import jakarta.transaction.Transactional;
 import lk.ijse.cmjd108.LostandFoundSys_2025.dao.ItemDao;
 import lk.ijse.cmjd108.LostandFoundSys_2025.dto.ItemDTO;
-import lk.ijse.cmjd108.LostandFoundSys_2025.dto.RequestDTO;
 import lk.ijse.cmjd108.LostandFoundSys_2025.dto.Status.ItemStatus;
 import lk.ijse.cmjd108.LostandFoundSys_2025.entities.ItemEntity;
 import lk.ijse.cmjd108.LostandFoundSys_2025.exception.ItemNotFoundException;
@@ -26,12 +25,10 @@ public class ItemService_IMPL implements ItemService {
     private final EntityDTO_Convertor entityDTOConvertor;
 
     @Override
-    public void addItem(RequestDTO requestDTO) {
-        ItemDTO itemDTO = UtilData.reqToItem(requestDTO);
-        
-        System.out.println();
-        System.out.println(itemDTO);
-        System.out.println();
+    public void addItem(ItemDTO itemDTO) {
+
+        itemDTO.setItemId(UtilData.generateItemId());
+        itemDTO.setClaimedUserId(null);
 
         itemDao.save(entityDTOConvertor.itemDTOToItemEntity(itemDTO));
 
