@@ -3,9 +3,11 @@ package lk.ijse.cmjd108.LostandFoundSys_2025.util;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.apache.catalina.connector.Request;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;
 
+import lk.ijse.cmjd108.LostandFoundSys_2025.dao.RequestDao;
 import lk.ijse.cmjd108.LostandFoundSys_2025.dao.UserDao;
 import lk.ijse.cmjd108.LostandFoundSys_2025.dto.ItemDTO;
 import lk.ijse.cmjd108.LostandFoundSys_2025.dto.RequestDTO;
@@ -13,6 +15,7 @@ import lk.ijse.cmjd108.LostandFoundSys_2025.dto.UserDTO;
 import lk.ijse.cmjd108.LostandFoundSys_2025.entities.ItemEntity;
 import lk.ijse.cmjd108.LostandFoundSys_2025.entities.RequestEntity;
 import lk.ijse.cmjd108.LostandFoundSys_2025.entities.UserEntity;
+import lk.ijse.cmjd108.LostandFoundSys_2025.exception.RequestNotFoundException;
 import lk.ijse.cmjd108.LostandFoundSys_2025.exception.UserNotFoundException;
 
 import org.modelmapper.TypeToken;
@@ -24,6 +27,7 @@ public class EntityDTO_Convertor {
 
     private final ModelMapper modelMapper;
     private final UserDao userDao;
+    private final RequestDao requestDao;
 
     //user
     public UserDTO userEntityToUserDTO(UserEntity userEntity) {
@@ -83,6 +87,7 @@ public class EntityDTO_Convertor {
         try {
             ItemDTO itemDTO = new ItemDTO();
             itemDTO.setItemId(itemEntity.getItemId());
+            itemDTO.setRequestId(itemEntity.getRequestEntity().getRequestId());
             if (itemEntity.getClaimedUser() == null) {
                 itemDTO.setClaimedUserId("");
             }else {
@@ -103,6 +108,7 @@ public class EntityDTO_Convertor {
         try {
             ItemEntity itemEntity = new ItemEntity();
             itemEntity.setItemId(itemDTO.getItemId());
+            itemEntity.setRequestEntity(requestDao.findById(itemDTO.getRequestId()).orElseThrow(() -> new RequestNotFoundException("Request not found")));
             if (itemDTO.getClaimedUserId().equals("") || itemDTO.getClaimedUserId() == null) {
                 itemEntity.setClaimedUser(null);
             }else {

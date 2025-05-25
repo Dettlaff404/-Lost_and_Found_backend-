@@ -25,7 +25,7 @@ public class ItemEntity {
     private String itemId;
     @OneToOne
     @JoinColumn(name = "requestId", nullable = false)
-    private String requestId;
+    private RequestEntity requestEntity;
     @ManyToOne
     @JoinColumn(name = "userId", nullable = true)
     private UserEntity claimedUser;

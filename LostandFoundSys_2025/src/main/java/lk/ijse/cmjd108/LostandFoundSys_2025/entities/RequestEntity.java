@@ -38,4 +38,6 @@ public class RequestEntity {
     @Enumerated(EnumType.STRING)
     private ReqStatus status;
 
+    @OneToOne(mappedBy = "requestEntity", cascade = CascadeType.ALL, orphanRemoval = true)
+    private ItemEntity item;
 }
