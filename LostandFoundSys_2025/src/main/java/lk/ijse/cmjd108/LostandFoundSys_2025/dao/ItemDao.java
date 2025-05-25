@@ -14,4 +14,7 @@ public interface ItemDao extends JpaRepository<ItemEntity, String> {
     //methord to get list of claimed items
     public List<ItemEntity> findByStatus(ItemStatus status);
 
+    //methord to get a ItemEntity by requestId
+    public ItemEntity findByRequestId(String requestId);
+
 }

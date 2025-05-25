@@ -44,6 +44,10 @@ public class RequestService_IMPL implements RequestService{
         if (foundRequestEntity.isEmpty()) {
             throw new RequestNotFoundException("Request not found");
         }
+
+        if (foundRequestEntity.get().getStatus() == ReqStatus.APPROVED) {
+            itemDao.deleteById(itemDao.findByRequestId(requestId).getItemId());
+        }
         
         requestDao.deleteById(requestId);
         System.out.println("Request " + requestId + " deleted Successfully");
