@@ -28,12 +28,13 @@ public class RequestService_IMPL implements RequestService{
     private final EntityDTO_Convertor entityDTOConvertor;
     
     @Override
-    public void addRequest(RequestDTO requestDTO) {
+    public RequestDTO addRequest(RequestDTO requestDTO) {
         requestDTO.setRequestId(UtilData.generateRequestId());
         requestDTO.setStatus(ReqStatus.PENDING);
         
         requestDao.save(entityDTOConvertor.requestDTOToRequestEntity(requestDTO));
         System.out.println("Request added Successfully");
+        return requestDTO;
     }
     
     @Override

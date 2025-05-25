@@ -13,6 +13,7 @@ import lombok.NoArgsConstructor;
 @Data
 public class ItemDTO {
     private String itemId;
+    private String requestId;
     private String claimedUserId;
     private String itemName;
     private String description;

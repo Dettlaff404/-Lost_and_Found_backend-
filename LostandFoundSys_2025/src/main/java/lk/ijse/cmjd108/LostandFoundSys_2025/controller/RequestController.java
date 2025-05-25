@@ -27,14 +27,14 @@ public class RequestController {
     private final RequestService requestService;
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Void> addRequst(@RequestBody RequestDTO requestDTO){
+    public ResponseEntity<RequestDTO> addRequst(@RequestBody RequestDTO requestDTO){
         
         if (requestDTO == null) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
         
-        requestService.addRequest(requestDTO);
-        return new ResponseEntity<>(HttpStatus.CREATED);
+        RequestDTO response = requestService.addRequest(requestDTO);
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
     @DeleteMapping
