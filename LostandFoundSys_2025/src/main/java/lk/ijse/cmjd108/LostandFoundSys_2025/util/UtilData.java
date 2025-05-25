@@ -22,7 +22,7 @@ public class UtilData {
         ItemDTO itemDTO = new ItemDTO();
         itemDTO.setRequestId(requestDTO.getRequestId());
         itemDTO.setItemId(generateItemId());
-        itemDTO.setClaimedUserId(null);
+        itemDTO.setClaimedUserId("");
         itemDTO.setItemName(requestDTO.getItemName());
         itemDTO.setDescription(requestDTO.getDescription());
         itemDTO.setLocation(requestDTO.getLocation());
