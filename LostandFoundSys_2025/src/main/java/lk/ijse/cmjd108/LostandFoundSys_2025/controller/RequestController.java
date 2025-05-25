@@ -27,14 +27,14 @@ public class RequestController {
     private final RequestService requestService;
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Void> addRequst(@RequestBody RequestDTO requestDTO){
+    public ResponseEntity<RequestDTO> addRequst(@RequestBody RequestDTO requestDTO){
         
         if (requestDTO == null) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
         
-        requestService.addRequest(requestDTO);
-        return new ResponseEntity<>(HttpStatus.CREATED);
+        RequestDTO response = requestService.addRequest(requestDTO);
+        return ResponseEntity.ok(response);
     }
 
     @DeleteMapping
@@ -59,7 +59,7 @@ public class RequestController {
     }
 
     @PatchMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Void> updateRequest(@RequestParam String requestId, @RequestBody RequestDTO requestDTO){
+    public ResponseEntity<RequestDTO> updateRequest(@RequestParam String requestId, @RequestBody RequestDTO requestDTO){
         
         if (requestId.isEmpty() || requestDTO == null) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
