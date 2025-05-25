@@ -7,13 +7,16 @@ import org.springframework.stereotype.Service;
 
 import jakarta.transaction.Transactional;
 import lk.ijse.cmjd108.LostandFoundSys_2025.dao.ItemDao;
+import lk.ijse.cmjd108.LostandFoundSys_2025.dao.RequestDao;
 import lk.ijse.cmjd108.LostandFoundSys_2025.dto.ItemDTO;
 import lk.ijse.cmjd108.LostandFoundSys_2025.dto.Status.ItemStatus;
 import lk.ijse.cmjd108.LostandFoundSys_2025.entities.ItemEntity;
+import lk.ijse.cmjd108.LostandFoundSys_2025.entities.RequestEntity;
 import lk.ijse.cmjd108.LostandFoundSys_2025.exception.ItemNotFoundException;
+import lk.ijse.cmjd108.LostandFoundSys_2025.exception.RequestNotFoundException;
 import lk.ijse.cmjd108.LostandFoundSys_2025.service.ItemService;
 import lk.ijse.cmjd108.LostandFoundSys_2025.util.EntityDTO_Convertor;
-import lk.ijse.cmjd108.LostandFoundSys_2025.util.UtilData;
+// import lk.ijse.cmjd108.LostandFoundSys_2025.util.UtilData;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -22,18 +25,19 @@ import lombok.RequiredArgsConstructor;
 public class ItemService_IMPL implements ItemService {
 
     private final ItemDao itemDao;
+    private final RequestDao requestDao;
     private final EntityDTO_Convertor entityDTOConvertor;
 
-    @Override
-    public void addItem(ItemDTO itemDTO) {
+    // @Override
+    // public void addItem(ItemDTO itemDTO) {
 
-        itemDTO.setItemId(UtilData.generateItemId());
-        itemDTO.setClaimedUserId(null);
+    //     itemDTO.setItemId(UtilData.generateItemId());
+    //     itemDTO.setClaimedUserId(null);
 
-        itemDao.save(entityDTOConvertor.itemDTOToItemEntity(itemDTO));
+    //     itemDao.save(entityDTOConvertor.itemDTOToItemEntity(itemDTO));
 
-        System.out.println("Item added Successfully");
-    }
+    //     System.out.println("Item added Successfully");
+    // }
 
     @Override
     public void deleteItem(String itemId) {
@@ -53,6 +57,15 @@ public class ItemService_IMPL implements ItemService {
         Optional<ItemEntity> foundItem = itemDao.findById(itemId);
         if (foundItem.isEmpty()) {
             throw new ItemNotFoundException("Item not found");
+        }
+
+        if (foundItem.get().getStatus() != itemDTO.getStatus()) {
+            Optional<RequestEntity> requestEntity = requestDao.findById(itemId);  
+            if (requestEntity.isEmpty()) {
+                throw new RequestNotFoundException("Request not found");
+            } 
+            
+            requestEntity.get().setItemStatus(itemDTO.getStatus());
         }
 
         itemDao.save(entityDTOConvertor.itemDTOToItemEntity(itemDTO));
