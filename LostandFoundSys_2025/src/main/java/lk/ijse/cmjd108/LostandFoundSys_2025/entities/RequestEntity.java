@@ -24,7 +24,6 @@ import lombok.NoArgsConstructor;
 @Table(name = "request")
 public class RequestEntity {
     @Id
-    @OneToOne(mappedBy = "requestId", cascade = CascadeType.ALL, orphanRemoval = true)
     private String requestId;
     @ManyToOne
     @JoinColumn(name = "userId", nullable = false)
