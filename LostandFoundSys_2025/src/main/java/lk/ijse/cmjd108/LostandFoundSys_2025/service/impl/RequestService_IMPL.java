@@ -6,7 +6,9 @@ import java.util.Optional;
 import org.springframework.stereotype.Service;
 
 import jakarta.transaction.Transactional;
+import lk.ijse.cmjd108.LostandFoundSys_2025.dao.ItemDao;
 import lk.ijse.cmjd108.LostandFoundSys_2025.dao.RequestDao;
+import lk.ijse.cmjd108.LostandFoundSys_2025.dto.ItemDTO;
 import lk.ijse.cmjd108.LostandFoundSys_2025.dto.RequestDTO;
 import lk.ijse.cmjd108.LostandFoundSys_2025.dto.Status.ReqStatus;
 import lk.ijse.cmjd108.LostandFoundSys_2025.entities.RequestEntity;
@@ -22,6 +24,7 @@ import lombok.RequiredArgsConstructor;
 public class RequestService_IMPL implements RequestService{
 
     private final RequestDao requestDao;
+    private final ItemDao itemDao;
     private final EntityDTO_Convertor entityDTOConvertor;
     
     @Override
@@ -51,6 +54,11 @@ public class RequestService_IMPL implements RequestService{
         Optional<RequestEntity> foundRequestEntity = requestDao.findById(requestId);
         if (foundRequestEntity.isEmpty()) {
             throw new RequestNotFoundException("Request not found");
+        }
+
+        if (requestDTO.getStatus() == ReqStatus.APPROVED) {
+            ItemDTO itemDTO = UtilData.reqToItem(requestDTO);
+            itemDao.save(entityDTOConvertor.itemDTOToItemEntity(itemDTO));
         }
         
         requestDao.save(entityDTOConvertor.requestDTOToRequestEntity(requestDTO));
