@@ -84,7 +84,7 @@ public class EntityDTO_Convertor {
             ItemDTO itemDTO = new ItemDTO();
             itemDTO.setItemId(itemEntity.getItemId());
             if (itemEntity.getClaimedUser() == null) {
-                itemDTO.setClaimedUserId(null);
+                itemDTO.setClaimedUserId("");
             }else {
                 itemDTO.setClaimedUserId(itemEntity.getClaimedUser().getUserId());
             }
