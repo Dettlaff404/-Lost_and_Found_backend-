@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import lk.ijse.cmjd108.LostandFoundSys_2025.dto.ItemDTO;
-import lk.ijse.cmjd108.LostandFoundSys_2025.dto.RequestDTO;
 import lk.ijse.cmjd108.LostandFoundSys_2025.exception.ItemNotFoundException;
 import lk.ijse.cmjd108.LostandFoundSys_2025.service.ItemService;
 import lombok.RequiredArgsConstructor;
@@ -28,13 +27,13 @@ public class ItemController {
     private final ItemService itemService;
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Void> addItem(@RequestBody RequestDTO requestDTO) {
+    public ResponseEntity<Void> addItem(@RequestBody ItemDTO itemDTO) {
         
-        if (requestDTO == null) {
+        if (itemDTO == null) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
         
-        itemService.addItem(requestDTO);
+        itemService.addItem(itemDTO);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
