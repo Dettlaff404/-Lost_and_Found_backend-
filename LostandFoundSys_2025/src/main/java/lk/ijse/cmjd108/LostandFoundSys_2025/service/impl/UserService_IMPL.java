@@ -3,6 +3,7 @@ package lk.ijse.cmjd108.LostandFoundSys_2025.service.impl;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import jakarta.transaction.Transactional;
@@ -22,10 +23,12 @@ public class UserService_IMPL implements UserService {
 
     private final UserDao userDao;
     private final EntityDTO_Convertor entityDTOConvertor;
+    private final PasswordEncoder passwordEncoder;
 
     @Override
     public void addUser(UserDTO userDTO) {
         userDTO.setUserId(UtilData.generateUserId());
+        userDTO.setPassword(passwordEncoder.encode(userDTO.getPassword()));
         
         userDao.save(entityDTOConvertor.userDTOToUserEntity(userDTO));
 
@@ -50,6 +53,9 @@ public class UserService_IMPL implements UserService {
         Optional<UserEntity> foundUserEntity = userDao.findById(userId);
         if (foundUserEntity.isEmpty()) {
             throw new UserNotFoundException("User not found");
+        }
+        if (passwordEncoder.encode(userDTO.getPassword()) != foundUserEntity.get().getPassword()) {
+            userDTO.setPassword(passwordEncoder.encode(userDTO.getPassword()));
         }
         
         userDao.save(entityDTOConvertor.userDTOToUserEntity(userDTO));

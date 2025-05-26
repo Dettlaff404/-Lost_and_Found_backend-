@@ -13,7 +13,7 @@ import lombok.RequiredArgsConstructor;
 
 @Component
 @RequiredArgsConstructor
-public class addDefaultAdminUser {
+public class AddDefaultAdminUser {
 
     private final UserDao userDao;
     private final EntityDTO_Convertor entityDTOConvertor;
