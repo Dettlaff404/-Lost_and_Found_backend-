@@ -33,8 +33,8 @@ public class UserController {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
 
-        userService.addUser(userDTO);
-        return ResponseEntity.ok(userDTO);
+        UserDTO response = userService.addUser(userDTO);
+        return ResponseEntity.ok(response);
     }
 
     @DeleteMapping
