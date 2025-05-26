@@ -27,14 +27,14 @@ public class UserController {
     private final UserService userService;
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Void> addUser(@RequestBody UserDTO userDTO){
+    public ResponseEntity<UserDTO> addUser(@RequestBody UserDTO userDTO){
         
         if (userDTO == null) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
 
-        userService.addUser(userDTO);
-        return new ResponseEntity<>(HttpStatus.CREATED);
+        UserDTO response = userService.addUser(userDTO);
+        return ResponseEntity.ok(response);
     }
 
     @DeleteMapping

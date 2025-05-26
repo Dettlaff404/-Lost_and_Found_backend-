@@ -34,7 +34,7 @@ public class RequestController {
         }
         
         RequestDTO response = requestService.addRequest(requestDTO);
-        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+        return ResponseEntity.ok(response);
     }
 
     @DeleteMapping

@@ -13,8 +13,8 @@ import lombok.RequiredArgsConstructor;
 
 @Component
 @RequiredArgsConstructor
-public class AddDefaultAdminUser {
-
+public class DefaultAdmin {
+    
     private final UserDao userDao;
     private final EntityDTO_Convertor entityDTOConvertor;
     private final PasswordEncoder passwordEncoder;
@@ -33,5 +33,4 @@ public class AddDefaultAdminUser {
             userDao.save(entityDTOConvertor.userDTOToUserEntity(adminUser));
         }
     }
-
 }
