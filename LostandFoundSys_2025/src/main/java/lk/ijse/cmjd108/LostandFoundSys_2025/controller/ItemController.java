@@ -97,19 +97,9 @@ public class ItemController {
         } 
     }
 
-    @GetMapping("/getlostitems")
-    public ResponseEntity<List<ItemDTO>> getLostItems() {
-        return ResponseEntity.ok(itemService.getLostItems());
-    }
-
-    @GetMapping("/getfounditems")
-    public ResponseEntity<List<ItemDTO>> getFoundItems() {
-        return ResponseEntity.ok(itemService.getFoundItems());
-    }
-
-    @GetMapping("/getclaimeditems")
-    public ResponseEntity<List<ItemDTO>> getClaimedItems() {
-        return ResponseEntity.ok(itemService.getClaimedItems());
+    @GetMapping("/getallitems")
+    public ResponseEntity<List<ItemDTO>> getAllItems() {
+        return ResponseEntity.ok(itemService.getAllItems());
     }
 
 }

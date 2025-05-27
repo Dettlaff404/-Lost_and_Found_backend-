@@ -9,7 +9,6 @@ import jakarta.transaction.Transactional;
 import lk.ijse.cmjd108.LostandFoundSys_2025.dao.ItemDao;
 import lk.ijse.cmjd108.LostandFoundSys_2025.dao.RequestDao;
 import lk.ijse.cmjd108.LostandFoundSys_2025.dto.ItemDTO;
-import lk.ijse.cmjd108.LostandFoundSys_2025.dto.Status.ItemStatus;
 import lk.ijse.cmjd108.LostandFoundSys_2025.entities.ItemEntity;
 import lk.ijse.cmjd108.LostandFoundSys_2025.exception.ItemNotFoundException;
 import lk.ijse.cmjd108.LostandFoundSys_2025.service.ItemService;
@@ -77,19 +76,8 @@ public class ItemService_IMPL implements ItemService {
     }
 
     @Override
-    public List<ItemDTO> getLostItems() {
-        return entityDTOConvertor.toItemDTOsList(itemDao.findByStatus(ItemStatus.LOST));
+    public List<ItemDTO> getAllItems() {
+        return entityDTOConvertor.toItemDTOsList(itemDao.findAll());
     }
-
-    @Override
-    public List<ItemDTO> getFoundItems() {
-        return entityDTOConvertor.toItemDTOsList(itemDao.findByStatus(ItemStatus.FOUND));
-    }
-
-    @Override
-    public List<ItemDTO> getClaimedItems() {
-        return entityDTOConvertor.toItemDTOsList(itemDao.findByStatus(ItemStatus.CLAIMED));
-    }
-
 
 }
