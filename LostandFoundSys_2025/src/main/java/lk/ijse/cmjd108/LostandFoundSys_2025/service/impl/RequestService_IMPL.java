@@ -11,6 +11,7 @@ import lk.ijse.cmjd108.LostandFoundSys_2025.dao.RequestDao;
 import lk.ijse.cmjd108.LostandFoundSys_2025.dto.ItemDTO;
 import lk.ijse.cmjd108.LostandFoundSys_2025.dto.RequestDTO;
 import lk.ijse.cmjd108.LostandFoundSys_2025.dto.Status.ReqStatus;
+import lk.ijse.cmjd108.LostandFoundSys_2025.entities.ItemEntity;
 import lk.ijse.cmjd108.LostandFoundSys_2025.entities.RequestEntity;
 import lk.ijse.cmjd108.LostandFoundSys_2025.exception.RequestNotFoundException;
 import lk.ijse.cmjd108.LostandFoundSys_2025.service.RequestService;
@@ -62,7 +63,14 @@ public class RequestService_IMPL implements RequestService{
         }
 
         if (requestDTO.getStatus() == ReqStatus.APPROVED) {
+
             ItemDTO itemDTO = UtilData.reqToItem(requestDTO);
+
+            Optional<ItemEntity> foundItemEntity = Optional.ofNullable(itemDao.findByRequestId(requestId));
+            if (foundItemEntity.isPresent()) {
+                itemDTO.setItemId(foundItemEntity.get().getItemId());
+            }
+
             itemDao.save(entityDTOConvertor.itemDTOToItemEntity(itemDTO));
         }
         

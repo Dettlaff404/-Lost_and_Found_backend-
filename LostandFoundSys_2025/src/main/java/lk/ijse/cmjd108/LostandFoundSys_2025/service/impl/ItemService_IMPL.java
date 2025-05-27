@@ -10,7 +10,9 @@ import lk.ijse.cmjd108.LostandFoundSys_2025.dao.ItemDao;
 import lk.ijse.cmjd108.LostandFoundSys_2025.dao.RequestDao;
 import lk.ijse.cmjd108.LostandFoundSys_2025.dto.ItemDTO;
 import lk.ijse.cmjd108.LostandFoundSys_2025.entities.ItemEntity;
+import lk.ijse.cmjd108.LostandFoundSys_2025.entities.RequestEntity;
 import lk.ijse.cmjd108.LostandFoundSys_2025.exception.ItemNotFoundException;
+import lk.ijse.cmjd108.LostandFoundSys_2025.exception.RequestNotFoundException;
 import lk.ijse.cmjd108.LostandFoundSys_2025.service.ItemService;
 import lk.ijse.cmjd108.LostandFoundSys_2025.util.EntityDTO_Convertor;
 // import lk.ijse.cmjd108.LostandFoundSys_2025.util.UtilData;
@@ -56,9 +58,16 @@ public class ItemService_IMPL implements ItemService {
             throw new ItemNotFoundException("Item not found");
         }
 
-        if (foundItem.get().getStatus() != itemDTO.getStatus()) {
-            requestDao.findById(itemDTO.getRequestId()).get().setItemStatus(itemDTO.getStatus());
-        }
+        Optional<RequestEntity> requestEntity = requestDao.findById(itemId);  
+        if (requestEntity.isEmpty()) {
+            throw new RequestNotFoundException("Request not found");
+        } 
+        
+        requestEntity.get().setItemName(itemDTO.getItemName());
+        requestEntity.get().setDescription(itemDTO.getDescription());
+        requestEntity.get().setLocation(itemDTO.getLocation());
+        requestEntity.get().setDate(itemDTO.getDate());
+        requestEntity.get().setItemStatus(itemDTO.getStatus());
 
         itemDao.save(entityDTOConvertor.itemDTOToItemEntity(itemDTO));
         System.out.println("Item " + itemId + " updated Successfully");
