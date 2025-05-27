@@ -58,12 +58,16 @@ public class ItemService_IMPL implements ItemService {
             throw new ItemNotFoundException("Item not found");
         }
 
-        if (foundItem.get().getStatus() != itemDTO.getStatus()) {
+        if (entityDTOConvertor.itemEntityToItemDTO(foundItem.get()) != itemDTO) {
             Optional<RequestEntity> requestEntity = requestDao.findById(itemId);  
             if (requestEntity.isEmpty()) {
                 throw new RequestNotFoundException("Request not found");
             } 
             
+            requestEntity.get().setItemName(itemDTO.getItemName());
+            requestEntity.get().setDescription(itemDTO.getDescription());
+            requestEntity.get().setLocation(itemDTO.getLocation());
+            requestEntity.get().setDate(itemDTO.getDate());
             requestEntity.get().setItemStatus(itemDTO.getStatus());
         }
 
