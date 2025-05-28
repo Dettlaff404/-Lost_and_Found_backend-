@@ -13,7 +13,7 @@ public class CORSConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource(){
         var corsConfiguration = new CorsConfiguration();
-        corsConfiguration.setAllowedOrigins(List.of("http://lcoalhost:3000"));
+        corsConfiguration.setAllowedOrigins(List.of("http://localhost:3000"));
         corsConfiguration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "PATCH","OPTIONS"));
         corsConfiguration.setAllowedHeaders(List.of("Authorization", "Content-Type"));
         corsConfiguration.setExposedHeaders(List.of("Authorization"));
