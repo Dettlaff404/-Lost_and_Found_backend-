@@ -35,7 +35,7 @@ public class AuthService_IMPL implements AuthService{
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(signIn.getEmail(), signIn.getPassword()));
         UserEntity userByEmail = userDao.findByEmail(signIn.getEmail()).orElseThrow(() -> new UsernameNotFoundException("User Not Found"));
-        String generatedToken = jwtUtils.generateToken(userByEmail.getEmail(), userByEmail.getAuthorities());
+        String generatedToken = jwtUtils.generateToken(userByEmail.getUserId(), userByEmail.getAuthorities());
         return JWTAuthResponse.builder().token(generatedToken).build();
     }
 
@@ -45,7 +45,7 @@ public class AuthService_IMPL implements AuthService{
         userDTO.setPassword(passwordEncoder.encode(userDTO.getPassword()));
         userDTO.setRole(Role.USER);
         UserEntity savedUser = userDao.save(entityDTOConvert.userDTOToUserEntity(userDTO));
-        String generatedToken = jwtUtils.generateToken(savedUser.getEmail(), savedUser.getAuthorities());
+        String generatedToken = jwtUtils.generateToken(savedUser.getUserId(), savedUser.getAuthorities());
         return JWTAuthResponse.builder().token(generatedToken).build();
     }
 
