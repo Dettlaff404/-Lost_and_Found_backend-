@@ -20,7 +20,7 @@ public class AuthController {
 
     private final AuthService authService;
 
-    @PostMapping("/signin")
+    @PostMapping("signin")
     public ResponseEntity<JWTAuthResponse> signIn(@RequestBody SignIn signIn) {
         return new ResponseEntity<>(authService.signIn(signIn),HttpStatus.OK);
     }
