@@ -313,6 +313,6 @@ Built with ❤️
 
 ---
 
-⭐ **Found this helpful? Give us a star!** ⭐
+⭐ **Found this helpful? Give me a star!** ⭐
 
 </div>
