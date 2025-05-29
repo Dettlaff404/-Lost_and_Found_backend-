@@ -79,4 +79,9 @@ public class UserService_IMPL implements UserService {
         return entityDTOConvertor.toUserDTOsList(userDao.findAll());
     }
 
+    @Override
+    public UserDTO getUserByEmail(String email) {
+        return entityDTOConvertor.userEntityToUserDTO(userDao.findByEmail(email).get());
+    }
+
 }
