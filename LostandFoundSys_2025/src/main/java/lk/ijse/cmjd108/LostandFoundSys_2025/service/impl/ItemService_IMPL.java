@@ -58,7 +58,8 @@ public class ItemService_IMPL implements ItemService {
             throw new ItemNotFoundException("Item not found");
         }
 
-        Optional<RequestEntity> requestEntity = requestDao.findById(itemId);  
+        Optional<RequestEntity> requestEntity = requestDao.findById(itemDTO.getRequestId());  
+
         if (requestEntity.isEmpty()) {
             throw new RequestNotFoundException("Request not found");
         } 
@@ -88,5 +89,4 @@ public class ItemService_IMPL implements ItemService {
     public List<ItemDTO> getAllItems() {
         return entityDTOConvertor.toItemDTOsList(itemDao.findAll());
     }
-
 }

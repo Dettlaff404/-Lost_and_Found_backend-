@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import lk.ijse.cmjd108.LostandFoundSys_2025.dto.ItemDTO;
 import lk.ijse.cmjd108.LostandFoundSys_2025.exception.ItemNotFoundException;
+import lk.ijse.cmjd108.LostandFoundSys_2025.exception.RequestNotFoundException;
 import lk.ijse.cmjd108.LostandFoundSys_2025.service.ItemService;
 import lombok.RequiredArgsConstructor;
 
@@ -69,6 +70,9 @@ public class ItemController {
             itemService.updateItem(itemId, itemDTO);
             return ResponseEntity.noContent().build();
         } catch (ItemNotFoundException e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        } catch (RequestNotFoundException e) {
             e.printStackTrace();
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         } catch (Exception e) {
