@@ -102,7 +102,7 @@ public class ItemController {
     }
 
     @GetMapping("/getallitems")
-    public ResponseEntity<List<ItemDTO>> getAllUsers() {
+    public ResponseEntity<List<ItemDTO>> getAllItems() {
         return ResponseEntity.ok(itemService.getAllItems());
     }
 

@@ -1,6 +1,11 @@
 package lk.ijse.cmjd108.LostandFoundSys_2025.entities;
 
+import java.util.Collection;
 import java.util.List;
+
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
@@ -19,7 +24,7 @@ import lombok.NoArgsConstructor;
 @Data
 @Entity
 @Table(name = "user")
-public class UserEntity {
+public class UserEntity implements UserDetails{
     @Id
     private String userId;
     private String fullname;
@@ -33,4 +38,14 @@ public class UserEntity {
     private List<RequestEntity> requests;
     @OneToMany(mappedBy = "claimedUser", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ItemEntity> items;
+
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return List.of(new SimpleGrantedAuthority("ROLE_" + role.name()));
+    }
+    @Override
+    public String getUsername() {
+        return email;
+    }
 }

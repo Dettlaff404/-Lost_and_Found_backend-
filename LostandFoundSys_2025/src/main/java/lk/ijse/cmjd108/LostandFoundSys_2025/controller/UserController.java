@@ -93,6 +93,24 @@ public class UserController {
         } 
     }
 
+    @GetMapping("/getuserbyemail")
+    public ResponseEntity<UserDTO> getUserByEmail(@RequestParam String email) {
+        
+        if (email.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+        
+        try {
+            return ResponseEntity.ok(userService.getUserByEmail(email));
+        } catch (UserNotFoundException e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
     @GetMapping("/getallusers")
     public ResponseEntity<List<UserDTO>> getAllUsers() {
         return ResponseEntity.ok(userService.getAllUsers());

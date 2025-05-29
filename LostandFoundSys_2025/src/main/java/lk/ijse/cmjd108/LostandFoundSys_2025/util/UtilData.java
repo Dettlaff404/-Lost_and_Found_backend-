@@ -6,6 +6,7 @@ import lk.ijse.cmjd108.LostandFoundSys_2025.dto.ItemDTO;
 import lk.ijse.cmjd108.LostandFoundSys_2025.dto.RequestDTO;
 
 public class UtilData {
+    
     public static String generateItemId(){
         return "ITM-" + UUID.randomUUID().toString();
     }
@@ -20,8 +21,8 @@ public class UtilData {
 
     public static ItemDTO reqToItem(RequestDTO requestDTO){
         ItemDTO itemDTO = new ItemDTO();
-        itemDTO.setRequestId(requestDTO.getRequestId());
         itemDTO.setItemId(generateItemId());
+        itemDTO.setRequestId(requestDTO.getRequestId());
         itemDTO.setClaimedUserId("");
         itemDTO.setItemName(requestDTO.getItemName());
         itemDTO.setDescription(requestDTO.getDescription());
