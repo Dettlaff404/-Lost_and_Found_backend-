@@ -45,6 +45,8 @@ public class ItemService_IMPL implements ItemService {
         if (foundItem.isEmpty()) {
             throw new ItemNotFoundException("Item not found");
         }
+
+        requestDao.deleteById(foundItem.get().getRequestEntity().getRequestId());
         
         itemDao.deleteById(itemId);
         System.out.println("Item " + itemId + " deleted Successfully");
