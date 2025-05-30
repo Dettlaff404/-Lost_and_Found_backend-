@@ -291,18 +291,6 @@ We welcome contributions! Here's how you can help:
 
 ---
 
-## 📋 Future Enhancements
-
-- [ ] 📱 Mobile API optimizations
-- [ ] 🔔 Real-time notifications
-- [ ] 📊 Analytics dashboard
-- [ ] 🗂️ File upload for item images
-- [ ] 🔍 Advanced search filters
-- [ ] 📧 Email notifications
-- [ ] 🌍 Multi-language support
-
----
-
 ## 📄 License
 
 <div align="center">
