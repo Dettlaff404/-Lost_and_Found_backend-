@@ -118,6 +118,12 @@ server.servlet.context-path=/lostandfound
 
 # JWT Configuration
 jwt.signing.key=your_jwt_signing_key
+
+# Default Admin Configuration
+fullName="Admin"
+email="admin@mail.com"
+mobile="0123456789"
+password="Admin2025@Lost&found"
 ```
 
 #### 3. 👨‍💼 Default Admin User
