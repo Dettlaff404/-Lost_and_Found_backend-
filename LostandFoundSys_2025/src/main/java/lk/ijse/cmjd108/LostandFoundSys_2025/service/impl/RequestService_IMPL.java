@@ -8,7 +8,6 @@ import org.springframework.stereotype.Service;
 import jakarta.transaction.Transactional;
 import lk.ijse.cmjd108.LostandFoundSys_2025.dao.ItemDao;
 import lk.ijse.cmjd108.LostandFoundSys_2025.dao.RequestDao;
-import lk.ijse.cmjd108.LostandFoundSys_2025.dto.ItemDTO;
 import lk.ijse.cmjd108.LostandFoundSys_2025.dto.RequestDTO;
 import lk.ijse.cmjd108.LostandFoundSys_2025.dto.Status.ReqStatus;
 import lk.ijse.cmjd108.LostandFoundSys_2025.entities.ItemEntity;
@@ -46,10 +45,6 @@ public class RequestService_IMPL implements RequestService{
             throw new RequestNotFoundException("Request not found");
         }
 
-        if (foundRequestEntity.get().getStatus() == ReqStatus.APPROVED) {
-            itemDao.deleteById(itemDao.findByRequestId(requestId).getItemId());
-        }
-        
         requestDao.deleteById(requestId);
         System.out.println("Request " + requestId + " deleted Successfully");
     }
@@ -62,20 +57,51 @@ public class RequestService_IMPL implements RequestService{
             throw new RequestNotFoundException("Request not found");
         }
 
+        RequestEntity requestEntity = foundRequestEntity.get();
+        ReqStatus oldStatus = requestEntity.getStatus();
+        
+        requestEntity.setItemName(requestDTO.getItemName());
+        requestEntity.setDescription(requestDTO.getDescription());
+        requestEntity.setLocation(requestDTO.getLocation());
+        requestEntity.setDate(requestDTO.getDate());
+        requestEntity.setItemStatus(requestDTO.getItemStatus());
+        requestEntity.setStatus(requestDTO.getStatus());
+
         if (requestDTO.getStatus() == ReqStatus.APPROVED) {
-
-            ItemDTO itemDTO = UtilData.reqToItem(requestDTO);
-
-            Optional<ItemEntity> foundItemEntity = Optional.ofNullable(itemDao.findByRequestId(requestId));
-            if (foundItemEntity.isPresent()) {
-                itemDTO.setItemId(foundItemEntity.get().getItemId());
-            }
-
-            itemDao.save(entityDTOConvertor.itemDTOToItemEntity(itemDTO));
+            handleApprovedRequest(requestEntity, requestDTO);
+        } else if (oldStatus == ReqStatus.APPROVED && requestDTO.getStatus() != ReqStatus.APPROVED) {
+            handleRejectedRequest(requestId);
         }
         
-        requestDao.save(entityDTOConvertor.requestDTOToRequestEntity(requestDTO));
+        requestDao.save(requestEntity);
         System.out.println("Request " + requestId + " updated Successfully");
+    }
+    
+    private void handleApprovedRequest(RequestEntity requestEntity, RequestDTO requestDTO) {
+        ItemEntity existingItem = requestEntity.getItem();
+        
+        if (existingItem != null) {
+            existingItem.setItemName(requestDTO.getItemName());
+            existingItem.setDescription(requestDTO.getDescription());
+            existingItem.setLocation(requestDTO.getLocation());
+            existingItem.setDate(requestDTO.getDate());
+            existingItem.setStatus(requestDTO.getItemStatus());
+            itemDao.save(existingItem);
+        } else {
+            ItemEntity newItem = entityDTOConvertor.itemDTOToItemEntity(UtilData.reqToItem(requestDTO));
+            
+            requestEntity.setItem(newItem);
+            
+            itemDao.save(newItem);
+        }
+    }
+    
+    private void handleRejectedRequest(String requestId) {
+        Optional<RequestEntity> requestEntity = requestDao.findById(requestId);
+        if (requestEntity.isPresent() && requestEntity.get().getItem() != null) {
+            requestEntity.get().setItem(null);
+            requestDao.save(requestEntity.get());
+        }
     }
     
     @Override

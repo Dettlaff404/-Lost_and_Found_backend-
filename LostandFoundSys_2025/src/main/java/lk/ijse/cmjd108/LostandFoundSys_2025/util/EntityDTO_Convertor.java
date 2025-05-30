@@ -1,6 +1,7 @@
 package lk.ijse.cmjd108.LostandFoundSys_2025.util;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.modelmapper.ModelMapper;
@@ -32,11 +33,18 @@ public class EntityDTO_Convertor {
     public UserDTO userEntityToUserDTO(UserEntity userEntity) {
         return modelMapper.map(userEntity, UserDTO.class);
     }
+    
     public UserEntity userDTOToUserEntity(UserDTO userDTO) {
         return modelMapper.map(userDTO, UserEntity.class);
     }
+    
     public List<UserDTO> toUserDTOsList(List<UserEntity> userEntities) {
         return modelMapper.map(userEntities, new TypeToken<List<UserDTO>>(){}.getType());
+    }
+    
+    // Helper method to get user by ID
+    public UserEntity getUserById(String userId) {
+        return userDao.findById(userId).orElseThrow(() -> new UserNotFoundException("User not found"));
     }
 
     //request
@@ -53,10 +61,12 @@ public class EntityDTO_Convertor {
             requestDTO.setStatus(requestEntity.getStatus());
             return requestDTO;
         } catch (Exception e) {
+            System.err.println("Error converting RequestEntity to RequestDTO: " + e.getMessage());
             e.printStackTrace();
             return null;
         }
     }
+    
     public RequestEntity requestDTOToRequestEntity(RequestDTO requestDTO) {
         try {
             RequestEntity requestEntity = new RequestEntity();
@@ -68,17 +78,20 @@ public class EntityDTO_Convertor {
             requestEntity.setDate(requestDTO.getDate());
             requestEntity.setItemStatus(requestDTO.getItemStatus());
             requestEntity.setStatus(requestDTO.getStatus());
-        return requestEntity;
+            
+            return requestEntity;
         } catch (Exception e) {
+            System.err.println("Error converting RequestDTO to RequestEntity: " + e.getMessage());
             e.printStackTrace();
             return null;
         }
-        
     }
+    
     public List<RequestDTO> toRequestDTOsList(List<RequestEntity> requestEntities) {
-        return requestEntities.stream().map(requestEntity -> 
-            requestEntityToRequestDTO(requestEntity)
-        ).collect(Collectors.toList());
+        return requestEntities.stream()
+            .map(this::requestEntityToRequestDTO)
+            .filter(dto -> dto != null)
+            .collect(Collectors.toList());
     }
 
     //item
@@ -86,12 +99,17 @@ public class EntityDTO_Convertor {
         try {
             ItemDTO itemDTO = new ItemDTO();
             itemDTO.setItemId(itemEntity.getItemId());
-            itemDTO.setRequestId(itemEntity.getRequestEntity().getRequestId());
+            
+            if (itemEntity.getRequestEntity() != null) {
+                itemDTO.setRequestId(itemEntity.getRequestEntity().getRequestId());
+            }
+            
             if (itemEntity.getClaimedUser() == null) {
                 itemDTO.setClaimedUserId("");
-            }else {
+            } else {
                 itemDTO.setClaimedUserId(itemEntity.getClaimedUser().getUserId());
             }
+            
             itemDTO.setItemName(itemEntity.getItemName());
             itemDTO.setDescription(itemEntity.getDescription());
             itemDTO.setLocation(itemEntity.getLocation());
@@ -99,35 +117,56 @@ public class EntityDTO_Convertor {
             itemDTO.setStatus(itemEntity.getStatus());
             return itemDTO;
         } catch (Exception e) {
+            System.err.println("Error converting ItemEntity to ItemDTO: " + e.getMessage());
             e.printStackTrace();
             return null;
         }
     }
+    
     public ItemEntity itemDTOToItemEntity(ItemDTO itemDTO) {
         try {
             ItemEntity itemEntity = new ItemEntity();
             itemEntity.setItemId(itemDTO.getItemId());
-            itemEntity.setRequestEntity(requestDao.findById(itemDTO.getRequestId()).orElseThrow(() -> new RequestNotFoundException("Request not found")));
-            if (itemDTO.getClaimedUserId().equals("") || itemDTO.getClaimedUserId() == null) {
-                itemEntity.setClaimedUser(null);
-            }else {
-                itemEntity.setClaimedUser(userDao.findById(itemDTO.getClaimedUserId()).orElseThrow(() -> new UserNotFoundException("User not found")));
+            
+            if (itemDTO.getRequestId() != null && !itemDTO.getRequestId().isEmpty()) {
+                Optional<RequestEntity> requestEntity = requestDao.findById(itemDTO.getRequestId());
+                if (requestEntity.isPresent()) {
+                    itemEntity.setRequestEntity(requestEntity.get());
+                } else {
+                    throw new RequestNotFoundException("Request not found with ID: " + itemDTO.getRequestId());
+                }
             }
+            
+            if (itemDTO.getClaimedUserId() != null && !itemDTO.getClaimedUserId().isEmpty()) {
+                Optional<UserEntity> userEntity = userDao.findById(itemDTO.getClaimedUserId());
+                if (userEntity.isPresent()) {
+                    itemEntity.setClaimedUser(userEntity.get());
+                } else {
+                    System.err.println("Warning: User not found with ID: " + itemDTO.getClaimedUserId());
+                    itemEntity.setClaimedUser(null);
+                }
+            } else {
+                itemEntity.setClaimedUser(null);
+            }
+            
             itemEntity.setItemName(itemDTO.getItemName());
             itemEntity.setDescription(itemDTO.getDescription());
             itemEntity.setLocation(itemDTO.getLocation());
             itemEntity.setDate(itemDTO.getDate());
             itemEntity.setStatus(itemDTO.getStatus());
+
             return itemEntity;
         } catch (Exception e) {
+            System.err.println("Error converting ItemDTO to ItemEntity: " + e.getMessage());
             e.printStackTrace();
             return null;
         }
     }
+    
     public List<ItemDTO> toItemDTOsList(List<ItemEntity> itemEntities) {
-        return itemEntities.stream().map(itemEntity -> 
-            itemEntityToItemDTO(itemEntity)
-        ).collect(Collectors.toList());
+        return itemEntities.stream()
+            .map(this::itemEntityToItemDTO)
+            .filter(dto -> dto != null)
+            .collect(Collectors.toList());
     }
-
 }

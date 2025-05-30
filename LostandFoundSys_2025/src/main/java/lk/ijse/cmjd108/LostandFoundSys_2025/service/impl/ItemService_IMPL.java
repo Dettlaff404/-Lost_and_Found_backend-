@@ -9,13 +9,12 @@ import jakarta.transaction.Transactional;
 import lk.ijse.cmjd108.LostandFoundSys_2025.dao.ItemDao;
 import lk.ijse.cmjd108.LostandFoundSys_2025.dao.RequestDao;
 import lk.ijse.cmjd108.LostandFoundSys_2025.dto.ItemDTO;
+import lk.ijse.cmjd108.LostandFoundSys_2025.dto.Status.ReqStatus;
 import lk.ijse.cmjd108.LostandFoundSys_2025.entities.ItemEntity;
 import lk.ijse.cmjd108.LostandFoundSys_2025.entities.RequestEntity;
 import lk.ijse.cmjd108.LostandFoundSys_2025.exception.ItemNotFoundException;
-import lk.ijse.cmjd108.LostandFoundSys_2025.exception.RequestNotFoundException;
 import lk.ijse.cmjd108.LostandFoundSys_2025.service.ItemService;
 import lk.ijse.cmjd108.LostandFoundSys_2025.util.EntityDTO_Convertor;
-// import lk.ijse.cmjd108.LostandFoundSys_2025.util.UtilData;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -27,17 +26,6 @@ public class ItemService_IMPL implements ItemService {
     private final RequestDao requestDao;
     private final EntityDTO_Convertor entityDTOConvertor;
 
-    // @Override
-    // public void addItem(ItemDTO itemDTO) {
-
-    //     itemDTO.setItemId(UtilData.generateItemId());
-    //     itemDTO.setClaimedUserId(null);
-
-    //     itemDao.save(entityDTOConvertor.itemDTOToItemEntity(itemDTO));
-
-    //     System.out.println("Item added Successfully");
-    // }
-
     @Override
     public void deleteItem(String itemId) {
 
@@ -46,7 +34,15 @@ public class ItemService_IMPL implements ItemService {
             throw new ItemNotFoundException("Item not found");
         }
 
-        requestDao.deleteById(foundItem.get().getRequestEntity().getRequestId());
+        ItemEntity item = foundItem.get();
+        RequestEntity associatedRequest = item.getRequestEntity();
+        
+        // Set the request status back to REJECTED since the item is being deleted
+        if (associatedRequest != null) {
+            associatedRequest.setStatus(ReqStatus.REJECTED);
+            associatedRequest.setItem(null);
+            requestDao.save(associatedRequest);
+        }
         
         itemDao.deleteById(itemId);
         System.out.println("Item " + itemId + " deleted Successfully");
@@ -60,19 +56,39 @@ public class ItemService_IMPL implements ItemService {
             throw new ItemNotFoundException("Item not found");
         }
 
-        Optional<RequestEntity> requestEntity = requestDao.findById(itemDTO.getRequestId());  
+        ItemEntity existingItem = foundItem.get();
+        RequestEntity associatedRequest = existingItem.getRequestEntity();
 
-        if (requestEntity.isEmpty()) {
-            throw new RequestNotFoundException("Request not found");
-        } 
+        // Update the associated request if it exists
+        if (associatedRequest != null) {
+            associatedRequest.setItemName(itemDTO.getItemName());
+            associatedRequest.setDescription(itemDTO.getDescription());
+            associatedRequest.setLocation(itemDTO.getLocation());
+            associatedRequest.setDate(itemDTO.getDate());
+            associatedRequest.setItemStatus(itemDTO.getStatus());
+            requestDao.save(associatedRequest);
+        }
+
+        // Update the item
+        existingItem.setItemName(itemDTO.getItemName());
+        existingItem.setDescription(itemDTO.getDescription());
+        existingItem.setLocation(itemDTO.getLocation());
+        existingItem.setDate(itemDTO.getDate());
+        existingItem.setStatus(itemDTO.getStatus());
         
-        requestEntity.get().setItemName(itemDTO.getItemName());
-        requestEntity.get().setDescription(itemDTO.getDescription());
-        requestEntity.get().setLocation(itemDTO.getLocation());
-        requestEntity.get().setDate(itemDTO.getDate());
-        requestEntity.get().setItemStatus(itemDTO.getStatus());
+        // Handle claimed user update
+        if (itemDTO.getClaimedUserId() != null && !itemDTO.getClaimedUserId().isEmpty()) {
+            try {
+                existingItem.setClaimedUser(entityDTOConvertor.getUserById(itemDTO.getClaimedUserId()));
+            } catch (Exception e) {
+                System.err.println("Warning: Could not find user with ID: " + itemDTO.getClaimedUserId());
+                existingItem.setClaimedUser(null);
+            }
+        } else {
+            existingItem.setClaimedUser(null);
+        }
 
-        itemDao.save(entityDTOConvertor.itemDTOToItemEntity(itemDTO));
+        itemDao.save(existingItem);
         System.out.println("Item " + itemId + " updated Successfully");
     }
 
