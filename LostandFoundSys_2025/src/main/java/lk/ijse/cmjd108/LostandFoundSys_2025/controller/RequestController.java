@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -38,6 +39,7 @@ public class RequestController {
     }
 
     @DeleteMapping
+    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_STAFF')")
     public ResponseEntity<Void> deleteRequest(@RequestParam ("requestId") String requestId){
         
         if (requestId.isEmpty()) {
@@ -59,6 +61,7 @@ public class RequestController {
     }
 
     @PatchMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_STAFF')")
     public ResponseEntity<RequestDTO> updateRequest(@RequestParam String requestId, @RequestBody RequestDTO requestDTO){
         
         if (requestId.isEmpty() || requestDTO == null) {
